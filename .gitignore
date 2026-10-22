@@ -1,0 +1,5 @@
+/bin/
+/emudhra-container-scanner
+*.exe
+*.test
+*.out
