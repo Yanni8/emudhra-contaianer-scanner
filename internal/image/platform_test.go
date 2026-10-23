@@ -11,7 +11,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/static"
 
-	"github.com/Yanni8/emudhra-container-scanner/container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 func TestParsePlatform(t *testing.T) {
