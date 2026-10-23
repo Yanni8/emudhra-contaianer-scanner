@@ -158,7 +158,10 @@ jobs:
           docker run --rm "$IMAGE" scan --quiet --fail-on never gcr.io/distroless/static-debian13:nonroot
 
           # The image does not itself trust the compromised eMudhra CAs.
+          # docker save writes the tarball with mode 0600; the image's non-root
+          # user (uid 65532) must be able to read it through the bind mount.
           docker save "$IMAGE" -o "${RUNNER_TEMP}/self.tar"
+          chmod 0644 "${RUNNER_TEMP}/self.tar"
           docker run --rm -v "${RUNNER_TEMP}/self.tar:/work/self.tar:ro" "$IMAGE" scan --quiet --input /work/self.tar
 
       - name: Build and push multi-platform image

@@ -210,11 +210,12 @@ docker run --rm ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan --format j
 
 The image runs as a non-root user (uid 65532) with `/work` as its working
 directory. Mount a `docker save` tarball or an OCI layout there to scan it
-with `--input`; for private registries, mount your Docker credentials and
-point `DOCKER_CONFIG` at them:
+with `--input` (run as yourself, because `docker save -o` writes the tarball
+readable only by its owner); for private registries, mount your Docker
+credentials and point `DOCKER_CONFIG` at them:
 
 ```
-docker run --rm -v "$PWD:/work:ro" ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan --input /work/image.tar
+docker run --rm --user "$(id -u)" -v "$PWD:/work:ro" ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan --input /work/image.tar
 docker run --rm --user "$(id -u)" -e DOCKER_CONFIG=/docker -v "$HOME/.docker:/docker:ro" \
   ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan registry.example.com/app:1.0
 ```
