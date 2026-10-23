@@ -3,7 +3,7 @@ package stores
 import (
 	"testing"
 
-	"emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
 )
 
 const sampleDebianConf = `# This file lists certificates that you wish to use or to ignore to be

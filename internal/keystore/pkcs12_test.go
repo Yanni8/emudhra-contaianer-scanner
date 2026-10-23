@@ -13,7 +13,7 @@ import (
 	"testing"
 	"unicode/utf16"
 
-	"emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
 	pkcs12 "software.sslmate.com/src/go-pkcs12"
 )
 

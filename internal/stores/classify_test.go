@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
 )
 
 var (

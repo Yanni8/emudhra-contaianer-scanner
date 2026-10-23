@@ -22,10 +22,10 @@ import (
 	"io"
 	"time"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/certs"
-	"emudhra-container-scanner/internal/image"
-	"emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/image"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
 )
 
 // Name is the scanner name written into results.

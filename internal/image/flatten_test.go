@@ -19,7 +19,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/static"
 	"github.com/google/go-containerregistry/pkg/v1/types"
 
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/units"
 )
 
 // tarRecord is one entry of a tar stream as the tests compare them.

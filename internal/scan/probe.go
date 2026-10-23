@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
 )
 
 // Rust packs string literals back to back, so a version string has no

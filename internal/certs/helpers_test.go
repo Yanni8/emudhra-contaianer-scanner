@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
 )
 
 // newCA returns a self-signed ECDSA P-256 CA certificate and its key.

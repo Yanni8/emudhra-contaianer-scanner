@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
 )
 
 func TestDistrolessStatusD(t *testing.T) {
