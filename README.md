@@ -316,10 +316,9 @@ git push origin v1.2.3
 ```
 
 The workflow runs the tests, builds the binaries for Linux, macOS and Windows,
-builds the image for linux/amd64 and linux/arm64, lets the image scan itself
-(the release fails if the image trusts the compromised CAs), pushes the image
-to GHCR and publishes a GitHub release with the archives, their SHA-256
-checksums and generated release notes. A tag with a pre-release suffix
+builds the image for linux/amd64 and linux/arm64, pushes the image to GHCR and
+publishes a GitHub release with the archives, their SHA-256 checksums and
+generated release notes. A tag with a pre-release suffix
 (`v1.2.3-rc.1`) is published as a pre-release and does not move the `latest`
 image tag.
 

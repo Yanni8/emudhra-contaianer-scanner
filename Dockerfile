@@ -29,8 +29,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 # Runtime stage. Distroless static ships the CA certificates the scanner needs
 # to reach registries, tzdata and a non-root user (uid 65532), and nothing
 # else. Debian 13's ca-certificates no longer trusts the roots behind the
-# compromised eMudhra CAs, so this image passes its own scan; the Debian 12
-# variant still trusts them and would fail the release workflow's self-scan.
+# compromised eMudhra CAs; the Debian 12 variant still does.
 FROM gcr.io/distroless/static-debian13:nonroot
 
 COPY --from=build /out/emudhra-container-scanner /usr/local/bin/emudhra-container-scanner

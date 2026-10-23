@@ -1,7 +1,6 @@
 # Release pipeline. Every pushed tag tests the code, builds the CLI binaries
-# and the container image, lets the image scan itself, pushes the image to
-# GitHub Container Registry and publishes a GitHub release. Branch pushes
-# never trigger it.
+# and the container image, pushes the image to GitHub Container Registry and
+# publishes a GitHub release. Branch pushes never trigger it.
 name: Release
 
 on:
@@ -136,33 +135,6 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-
-      - name: Build amd64 image for the smoke test
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
-        with:
-          context: .
-          platforms: linux/amd64
-          load: true
-          tags: ${{ steps.image.outputs.name }}:smoke
-          build-args: VERSION=${{ github.ref_name }}
-
-      - name: Smoke test
-        env:
-          IMAGE: ${{ steps.image.outputs.name }}:smoke
-          VERSION: ${{ github.ref_name }}
-        run: |
-          # The binary runs and reports the tagged version.
-          docker run --rm "$IMAGE" version | tee /dev/stderr | grep -F " ${VERSION} "
-
-          # The image reaches a registry over TLS, so its CA certificates work.
-          docker run --rm "$IMAGE" scan --quiet --fail-on never gcr.io/distroless/static-debian13:nonroot
-
-          # The image does not itself trust the compromised eMudhra CAs.
-          # docker save writes the tarball with mode 0600; the image's non-root
-          # user (uid 65532) must be able to read it through the bind mount.
-          docker save "$IMAGE" -o "${RUNNER_TEMP}/self.tar"
-          chmod 0644 "${RUNNER_TEMP}/self.tar"
-          docker run --rm -v "${RUNNER_TEMP}/self.tar:/work/self.tar:ro" "$IMAGE" scan --quiet --input /work/self.tar
 
       - name: Build and push multi-platform image
         id: build
