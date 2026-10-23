@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/rpmdb"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/rpmdb"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 // packages assembles the package status list: distribution packages

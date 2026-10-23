@@ -15,7 +15,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/layout"
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 const (

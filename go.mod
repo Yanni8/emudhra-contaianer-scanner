@@ -1,4 +1,4 @@
-module github.com/Yanni8/emudhra-contaianer-scanner
+module github.com/Yanni8/emudhra-container-scanner
 
 go 1.25.0
 

@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 func pkixName(cn string) pkix.Name {

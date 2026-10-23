@@ -22,9 +22,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/certs"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 // --- fixtures ---------------------------------------------------------------

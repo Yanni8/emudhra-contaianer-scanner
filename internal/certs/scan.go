@@ -7,7 +7,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/keystore"
+	"github.com/Yanni8/emudhra-container-scanner/internal/keystore"
 )
 
 // Scan window geometry. A file is read in windows of windowSize bytes that

@@ -16,11 +16,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/blocklist"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/certs"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/image"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/report"
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/scan"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-container-scanner/internal/image"
+	"github.com/Yanni8/emudhra-container-scanner/internal/report"
+	"github.com/Yanni8/emudhra-container-scanner/internal/scan"
 )
 
 // appName is the command name used in messages; it is the scanner name the

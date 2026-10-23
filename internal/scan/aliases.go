@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/Yanni8/emudhra-contaianer-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 // resolveLink follows symlinks and hard links (including directory symlinks
