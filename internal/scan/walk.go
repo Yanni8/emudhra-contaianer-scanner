@@ -14,11 +14,11 @@ import (
 	"strings"
 	"time"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/certs"
-	"emudhra-container-scanner/internal/rpmdb"
-	"emudhra-container-scanner/internal/stores"
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-container-scanner/internal/rpmdb"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 // Sizes and limits of the walk.

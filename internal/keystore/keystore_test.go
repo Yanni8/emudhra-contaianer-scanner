@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	"emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
 )
 
 // --- shared helpers ---------------------------------------------------------

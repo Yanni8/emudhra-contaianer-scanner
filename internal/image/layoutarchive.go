@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 // maxLayoutArchiveSize caps the bytes extracted from an OCI image layout

@@ -28,8 +28,8 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/scan"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/scan"
 )
 
 // fixture is the docker-archive built by TestMain: a linux/s390x image (a

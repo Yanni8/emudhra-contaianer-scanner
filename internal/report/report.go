@@ -10,10 +10,10 @@ import (
 	"sort"
 	"strings"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/scan"
-	"emudhra-container-scanner/internal/stores"
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/scan"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 // WriteJSON writes r as indented JSON.

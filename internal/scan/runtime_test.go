@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/certs"
-	"emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 // spkiInner returns the value bytes of a SubjectPublicKeyInfo without its

@@ -204,8 +204,8 @@ Every release is also published as a multi-platform (linux/amd64,
 linux/arm64) image on GitHub Container Registry:
 
 ```
-docker run --rm ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan debian:latest
-docker run --rm ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan --format json node:20-slim > report.json
+docker run --rm ghcr.io/yanni8/emudhra-container-scanner:latest scan debian:latest
+docker run --rm ghcr.io/yanni8/emudhra-container-scanner:latest scan --format json node:20-slim > report.json
 ```
 
 The image runs as a non-root user (uid 65532) with `/work` as its working
@@ -215,9 +215,9 @@ readable only by its owner); for private registries, mount your Docker
 credentials and point `DOCKER_CONFIG` at them:
 
 ```
-docker run --rm --user "$(id -u)" -v "$PWD:/work:ro" ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan --input /work/image.tar
+docker run --rm --user "$(id -u)" -v "$PWD:/work:ro" ghcr.io/yanni8/emudhra-container-scanner:latest scan --input /work/image.tar
 docker run --rm --user "$(id -u)" -e DOCKER_CONFIG=/docker -v "$HOME/.docker:/docker:ro" \
-  ghcr.io/yanni8/emudhra-contaianer-scanner:latest scan registry.example.com/app:1.0
+  ghcr.io/yanni8/emudhra-container-scanner:latest scan registry.example.com/app:1.0
 ```
 
 Build it locally with `docker build -t emudhra-container-scanner .`.

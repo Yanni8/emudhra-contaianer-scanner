@@ -10,7 +10,7 @@ import (
 
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 const (

@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"emudhra-container-scanner/internal/keystore"
+	"github.com/Yanni8/emudhra-container-scanner/internal/keystore"
 )
 
 // keystoreFound converts keystore entries into Founds. Offsets are located

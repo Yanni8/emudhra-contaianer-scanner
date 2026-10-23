@@ -13,8 +13,9 @@ import (
 	"testing"
 	"unicode/utf16"
 
-	"emudhra-container-scanner/internal/blocklist"
 	pkcs12 "software.sslmate.com/src/go-pkcs12"
+
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
 )
 
 // --- PKCS#12 test helpers ---------------------------------------------------

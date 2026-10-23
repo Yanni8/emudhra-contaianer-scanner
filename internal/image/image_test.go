@@ -18,7 +18,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/remote/transport"
 	"github.com/google/go-containerregistry/pkg/v1/types"
 
-	"emudhra-container-scanner/internal/units"
+	"github.com/Yanni8/emudhra-container-scanner/internal/units"
 )
 
 func TestOpenRegistryIndexDefaultPlatform(t *testing.T) {

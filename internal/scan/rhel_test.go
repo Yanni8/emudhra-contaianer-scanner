@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"emudhra-container-scanner/internal/blocklist"
-	"emudhra-container-scanner/internal/certs"
-	"emudhra-container-scanner/internal/stores"
+	"github.com/Yanni8/emudhra-container-scanner/internal/blocklist"
+	"github.com/Yanni8/emudhra-container-scanner/internal/certs"
+	"github.com/Yanni8/emudhra-container-scanner/internal/stores"
 )
 
 // p11Object renders one p11-kit certificate object with the given trust
