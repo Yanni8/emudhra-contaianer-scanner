@@ -1,0 +1,12 @@
+# Keep the build context to the Go sources.
+.git
+.github
+.gitignore
+.dockerignore
+Dockerfile
+README.md
+bin/
+emudhra-container-scanner
+*.exe
+*.test
+*.out

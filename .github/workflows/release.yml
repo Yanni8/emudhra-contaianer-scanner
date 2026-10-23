@@ -1,0 +1,233 @@
+# Release pipeline. Every pushed tag tests the code, builds the CLI binaries
+# and the container image, lets the image scan itself, pushes the image to
+# GitHub Container Registry and publishes a GitHub release. Branch pushes
+# never trigger it.
+name: Release
+
+on:
+  push:
+    tags:
+      - '**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  BINARY: emudhra-container-scanner
+  REGISTRY: ghcr.io
+  # Release builds use the newest stable Go; go.mod stays the minimum version.
+  GO_VERSION: stable
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
+  binaries:
+    name: Build binaries
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build archives and checksums
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          version="${VERSION#v}"
+          mkdir -p dist
+          for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64; do
+            os="${target%/*}"
+            arch="${target#*/}"
+            ext=""
+            if [[ "$os" == windows ]]; then ext=".exe"; fi
+            dir="build/${os}_${arch}"
+            CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" \
+              go build -trimpath -ldflags="-s -w -X main.version=${VERSION}" -o "${dir}/${BINARY}${ext}" .
+            name="${BINARY}_${version}_${os}_${arch}"
+            if [[ "$os" == windows ]]; then
+              zip -q -j "dist/${name}.zip" "${dir}/${BINARY}${ext}" README.md
+            else
+              tar -czf "dist/${name}.tar.gz" -C "$dir" "${BINARY}${ext}" -C "$PWD" README.md
+            fi
+          done
+          (cd dist && sha256sum -- *.tar.gz *.zip > "${BINARY}_${version}_checksums.txt")
+          ls -l dist
+
+      - name: Upload archives
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: binaries
+          path: dist/
+          if-no-files-found: error
+
+  image:
+    name: Build and push image
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tags: ${{ steps.meta.outputs.tags }}
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Image name
+        id: image
+        # GHCR wants a lowercase path; the repository owner may be mixed case.
+        run: echo "name=${REGISTRY}/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Log in to GHCR
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tags, labels and annotations
+        id: meta
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+        with:
+          images: ${{ steps.image.outputs.name }}
+          # The git tag itself always becomes an image tag. Semver tags also
+          # get 1.2.3, 1.2, 1 and latest; pre-releases (v1.2.3-rc.1) get only
+          # their full version and never move latest.
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Build amd64 image for the smoke test
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: ${{ steps.image.outputs.name }}:smoke
+          build-args: VERSION=${{ github.ref_name }}
+
+      - name: Smoke test
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}:smoke
+          VERSION: ${{ github.ref_name }}
+        run: |
+          # The binary runs and reports the tagged version.
+          docker run --rm "$IMAGE" version | tee /dev/stderr | grep -F " ${VERSION} "
+
+          # The image reaches a registry over TLS, so its CA certificates work.
+          docker run --rm "$IMAGE" scan --quiet --fail-on never gcr.io/distroless/static-debian13:nonroot
+
+          # The image does not itself trust the compromised eMudhra CAs.
+          docker save "$IMAGE" -o "${RUNNER_TEMP}/self.tar"
+          docker run --rm -v "${RUNNER_TEMP}/self.tar:/work/self.tar:ro" "$IMAGE" scan --quiet --input /work/self.tar
+
+      - name: Build and push multi-platform image
+        id: build
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: VERSION=${{ github.ref_name }}
+          provenance: mode=max
+          sbom: true
+
+  release:
+    name: Publish release
+    needs: [binaries, image]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download archives
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: binaries
+          path: dist
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+          IMAGE_TAGS: ${{ needs.image.outputs.tags }}
+          IMAGE_DIGEST: ${{ needs.image.outputs.digest }}
+        run: |
+          version="${TAG#v}"
+          notes="${RUNNER_TEMP}/notes.md"
+          {
+            echo "## Container image"
+            echo
+            echo "Multi-platform image (linux/amd64, linux/arm64) on GitHub Container Registry:"
+            echo
+            echo '```'
+            while IFS= read -r tag; do
+              if [[ -n "$tag" ]]; then echo "docker pull ${tag}"; fi
+            done <<< "$IMAGE_TAGS"
+            echo '```'
+            echo
+            echo "Index digest: \`${IMAGE_DIGEST}\`"
+            echo
+            echo "## Binaries"
+            echo
+            echo "Archives for Linux, macOS and Windows are attached. Verify a download with:"
+            echo
+            echo '```'
+            echo "sha256sum --ignore-missing -c ${BINARY}_${version}_checksums.txt"
+            echo '```'
+          } > "$notes"
+
+          args=(--title "$TAG" --notes-file "$notes" --generate-notes --verify-tag)
+          if [[ "$TAG" == *-* ]]; then
+            args+=(--prerelease)
+          fi
+
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            echo "release $TAG already exists; replacing its assets"
+            gh release upload "$TAG" --clobber dist/*
+          else
+            gh release create "$TAG" "${args[@]}" dist/*
+          fi
